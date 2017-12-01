@@ -103,6 +103,9 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Please input a message!", Toast.LENGTH_SHORT).show();
                 }else if(aes.isChecked()){
                     encryptionWithAES();
+                    eButton.setEnabled(false);
+                    aes.setEnabled(false);
+                    rsa.setEnabled(false);
                 }else if(rsa.isChecked()){
                     if(!oaep.isChecked()){
                         RSAcipher = new RSACipher();
@@ -115,7 +118,9 @@ public class MainActivity extends AppCompatActivity {
                         encryptedMessage = RSAcipher.encrypt(bytes,pubKey);
                         encrypt.setText(hc.toHex(encryptedMessage));
                     }
-
+                    eButton.setEnabled(false);
+                    aes.setEnabled(false);
+                    rsa.setEnabled(false);
                 }
             }
         });
@@ -128,9 +133,15 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"Please input a message!", Toast.LENGTH_SHORT).show();
                 }else if(aes.isChecked()){
                     decryptionWithAES();
+                    eButton.setEnabled(true);
+                    aes.setEnabled(true);
+                    rsa.setEnabled(true);
                 }else if(rsa.isChecked()){
                     decryptedMessage = RSAcipher.decrypt(encryptedMessage,priKey);
                     decrypt.setText(new String(decryptedMessage));
+                    eButton.setEnabled(true);
+                    aes.setEnabled(true);
+                    rsa.setEnabled(true);
                 }
             }
         });
@@ -230,6 +241,7 @@ public class MainActivity extends AppCompatActivity {
         rsa = (RadioButton) findViewById(R.id.rsa);
         oaep = (CheckBox) findViewById(R.id.oaep);
         aes.setChecked(true);
+        oaep.setEnabled(false);
     }
 
 }
