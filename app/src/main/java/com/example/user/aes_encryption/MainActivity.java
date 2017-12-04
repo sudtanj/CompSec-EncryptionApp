@@ -37,9 +37,8 @@ import javax.crypto.spec.SecretKeySpec;
 public class MainActivity extends AppCompatActivity {
 
     //views
-    TextView encrypt;
-    TextView decrypt;
-    EditText input;
+    EditText encrypt;
+    EditText decrypt;
     Button eButton;
     Button dButton;
     RadioButton aes;
@@ -98,14 +97,11 @@ public class MainActivity extends AppCompatActivity {
         eButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                message = input.getText().toString();
+                message = decrypt.getText().toString();
                 if(message.equals("")){
                     Toast.makeText(getApplicationContext(),"Please input a message!", Toast.LENGTH_SHORT).show();
                 }else if(aes.isChecked()){
                     encryptionWithAES();
-                    eButton.setEnabled(false);
-                    aes.setEnabled(false);
-                    rsa.setEnabled(false);
                 }else if(rsa.isChecked()){
                     if(!oaep.isChecked()){
                         RSAcipher = new RSACipher();
@@ -118,9 +114,6 @@ public class MainActivity extends AppCompatActivity {
                         encryptedMessage = RSAcipher.encrypt(bytes,pubKey);
                         encrypt.setText(hc.toHex(encryptedMessage));
                     }
-                    eButton.setEnabled(false);
-                    aes.setEnabled(false);
-                    rsa.setEnabled(false);
                 }
             }
         });
@@ -129,47 +122,20 @@ public class MainActivity extends AppCompatActivity {
         dButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                encryptedMessage = hc.hexStringToByteArray(encrypt.getText().toString());
                 if(encryptedMessage==null){
                     Toast.makeText(getApplicationContext(),"Please input a message!", Toast.LENGTH_SHORT).show();
                 }else if(aes.isChecked()){
                     decryptionWithAES();
-                    eButton.setEnabled(true);
-                    aes.setEnabled(true);
-                    rsa.setEnabled(true);
                 }else if(rsa.isChecked()){
                     decryptedMessage = RSAcipher.decrypt(encryptedMessage,priKey);
                     decrypt.setText(new String(decryptedMessage));
-                    eButton.setEnabled(true);
-                    aes.setEnabled(true);
-                    rsa.setEnabled(true);
                 }
             }
         });
     }
 
     private void encryptionWithAES(){
-        message=input.getText().toString();
-
-        // Get the KeyGenerator
-
-        kgen = null;
-        try {
-            kgen = KeyGenerator.getInstance("AES");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        kgen.init(128); // 192 and 256 bits may not be available
-
-
-        // Generate the secret key specs.
-        skey = kgen.generateKey();
-        byte[] raw = skey.getEncoded();
-
-        skeySpec = new SecretKeySpec(raw, "AES");
-
-
-        // Instantiate the cipher
-
         cipher = null;
         try {
             cipher = Cipher.getInstance("AES");
@@ -193,10 +159,6 @@ public class MainActivity extends AppCompatActivity {
         } catch (BadPaddingException e) {
             e.printStackTrace();
         }
-
-
-
-        //Toast.makeText(getApplicationContext(),"encrypted string: " + asHex(encrypted) +"\n"+"Original string: " + originalString + " " + asHex(original) , Toast.LENGTH_SHORT).show();
         encrypt.setText(hc.toHex(encryptedMessage));
 
     }
@@ -216,15 +178,28 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         String originalString = new String(decryptedMessage);
+        Toast.makeText(getApplicationContext(), originalString, Toast.LENGTH_SHORT).show();
         decrypt.setText(originalString);
     }
 
     //initializing variables needed for encryption
     void initializeKeys(){
-        //enter key size for the key generator
-        keygen = new RSAKeyGenerator(1024);
-        //keygen = new RSAKeyGenerator(2048);
+        //AES key generation
+        kgen = null;
+        try {
+            kgen = KeyGenerator.getInstance("AES");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        kgen.init(128); // 192 and 256 bits may not be available
+        // Generate the secret key specs.
+        skey = kgen.generateKey();
+        byte[] raw = skey.getEncoded();
 
+        skeySpec = new SecretKeySpec(raw, "AES");
+
+        //RSA key generation
+        keygen = new RSAKeyGenerator(1024);
         pubKey = keygen.generatePublicKey();
         priKey = keygen.generatePrivateKey();
 
@@ -234,9 +209,8 @@ public class MainActivity extends AppCompatActivity {
     void initializeViews(){
         eButton = (Button) findViewById(R.id.encryptButton);
         dButton = (Button) findViewById(R.id.decryptButton);
-        encrypt = (TextView) findViewById(R.id.encryptedText);
-        decrypt = (TextView) findViewById(R.id.decryptedText);
-        input = (EditText) findViewById(R.id.editText);
+        encrypt = (EditText) findViewById(R.id.encryptRes);
+        decrypt = (EditText) findViewById(R.id.decryptRes);
         aes = (RadioButton) findViewById(R.id.aes);
         rsa = (RadioButton) findViewById(R.id.rsa);
         oaep = (CheckBox) findViewById(R.id.oaep);

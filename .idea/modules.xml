@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/aes_encryption.iml" filepath="$PROJECT_DIR$/aes_encryption.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CompSec-EncryptionApp.iml" filepath="$PROJECT_DIR$/CompSec-EncryptionApp.iml" />
+      <module fileurl="file://C:\Users\Samuel Teguh\Documents\GitHub\CompSec-EncryptionApp\aes_encryption.iml" filepath="C:\Users\Samuel Teguh\Documents\GitHub\CompSec-EncryptionApp\aes_encryption.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Samuel Teguh\Documents\GitHub\CompSec-EncryptionApp\app\app.iml" filepath="C:\Users\Samuel Teguh\Documents\GitHub\CompSec-EncryptionApp\app\app.iml" />
     </modules>
   </component>
 </project>
